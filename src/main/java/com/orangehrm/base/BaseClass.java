@@ -1,5 +1,6 @@
 package com.orangehrm.base;
 
+import com.orangehrm.actiondriver.ActionDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -17,7 +18,8 @@ import java.util.concurrent.locks.LockSupport;
 public class BaseClass {
 
     protected static Properties properties;
-    protected static WebDriver driver;
+    protected WebDriver driver;
+    protected ActionDriver actionDriver;
 
 
     @BeforeSuite
@@ -33,6 +35,9 @@ public class BaseClass {
     public void setup() {
         launchBrowser();
         configureBrowser();
+        // Initialize ActionDriver for the current WebDriver instance
+        actionDriver = new ActionDriver(driver);
+        System.out.println("Action driver instance is created...");
     }
 
     // initialize the web driver based on the browser in config file
@@ -54,9 +59,7 @@ public class BaseClass {
                 break;
 
             default:
-                throw new IllegalArgumentException(
-                        "Unsupported browser: " + browser
-                );
+                throw new IllegalArgumentException("Unsupported browser: " + browser);
         }
     }
 
@@ -84,13 +87,28 @@ public class BaseClass {
         if (driver != null) {
             driver.quit();
         }
+        System.out.println("WebDriver instance is closed...");
+        driver = null;
+        actionDriver = null;
     }
 
-    // static wait for pause
+    // driver getter method
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    // ActionDriver getter
+    public ActionDriver getActionDriver() {
+        if (actionDriver == null) {
+            throw new IllegalStateException("ActionDriver is not initialized");
+        }
+        return actionDriver;
+    }
+
+    // Static pause for debugging/application-specific delays only
     public static void pause(int seconds) {
         LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
     }
-
 
 
 }

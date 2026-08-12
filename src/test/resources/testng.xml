@@ -2,8 +2,10 @@
 <suite name="OrangeHRMSuite">
     <test name="OrangeHRMTest">
         <classes>
-            <class name="com.orangehrm.tests.DummyTest"> </class>
-            <class name="com.orangehrm.tests.DummyTest2"> </class>
+<!--            <class name="com.orangehrm.tests.DummyTest"> </class>-->
+<!--            <class name="com.orangehrm.tests.DummyTest2"> </class>-->
+            <class name="com.orangehrm.tests.LoginPageTest"> </class>
+            <class name="com.orangehrm.tests.HomePageTest"> </class>
         </classes>
     </test>
 </suite>
