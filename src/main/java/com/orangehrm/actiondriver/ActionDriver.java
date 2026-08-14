@@ -1,5 +1,7 @@
 package com.orangehrm.actiondriver;
 
+import com.orangehrm.utilities.LoggerManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -11,86 +13,112 @@ import java.time.Duration;
 
 public class ActionDriver {
 
-    private final WebDriver driver;
+    private static final int EXPLICIT_WAIT = 10;
+
     private final WebDriverWait wait;
 
+    private static final Logger logger = LoggerManager.getLogger(ActionDriver.class);
+
     public ActionDriver(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        if (driver == null) {
+            logger.error("WebDriver cannot be null");
+            throw new IllegalArgumentException("WebDriver cannot be null");
+        }
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT));
+        logger.info("ActionDriver initialized with {} seconds explicit wait", EXPLICIT_WAIT);
     }
 
-    // Click an element
     public void click(By locator) {
         try {
+            logger.debug("Attempting to click element: {}", locator);
             WebElement element = waitForElementToBeClickable(locator);
             element.click();
+            logger.info("Successfully clicked element: {}", locator);
         } catch (Exception e) {
+            logger.error("Unable to click element: {}", locator, e);
             throw new RuntimeException("Unable to click element: " + locator, e);
         }
     }
 
-    // Enter text into input field
     public void enterText(By locator, String text) {
         try {
+            logger.debug("Attempting to enter text into element: {}", locator);
             WebElement element = waitForElementToBeVisible(locator);
             element.clear();
             element.sendKeys(text);
+            logger.info("Text entered successfully into element: {}", locator);
         } catch (Exception e) {
+            logger.error("Unable to enter text into element: {}", locator, e);
             throw new RuntimeException("Unable to enter text into element: " + locator, e);
         }
     }
 
-    // Get text from an element
     public String getText(By locator) {
         try {
+            logger.debug("Attempting to get text from element: {}", locator);
             WebElement element = waitForElementToBeVisible(locator);
-            return element.getText();
+            String actualText = element.getText();
+            logger.info("Successfully retrieved text from element: {}", locator);
+            return actualText;
         } catch (Exception e) {
+            logger.error("Unable to get text from element: {}", locator, e);
             throw new RuntimeException("Unable to get text from element: " + locator, e);
         }
     }
 
-    // Method to compare text
     public void compareText(By locator, String expectedText) {
         try {
-            waitForElementToBeVisible(locator);
-            String actualText = driver.findElement(locator).getText();
+            logger.debug("Comparing text for element: {}", locator);
+            WebElement element = waitForElementToBeVisible(locator);
+            String actualText = element.getText();
             if (!expectedText.equals(actualText)) {
-                throw new AssertionError(
-                        "Text comparison failed. Expected: [" + expectedText + "] but Actual: [" + actualText + "]");
+                logger.error("Text comparison failed. Expected: [{}], Actual: [{}]", expectedText, actualText);
+                throw new AssertionError("Text comparison failed. Expected: [" + expectedText + "] but Actual: [" + actualText + "]");
             }
-            System.out.println("Text comparison successful. Actual: [" + actualText + "]");
-        }  catch (Exception e) {
+            logger.info("Text comparison successful. Expected: [{}], Actual: [{}]", expectedText, actualText);
+        } catch (Exception e) {
+            logger.error("Unable to compare text for element: {}", locator, e);
             throw new RuntimeException("Unable to compare text for element: " + locator, e);
         }
     }
 
-    // Check if an element is displayed
     public boolean isElementDisplayed(By locator) {
         try {
+            logger.debug("Checking if element is displayed: {}", locator);
             WebElement element = waitForElementToBeVisible(locator);
-            return element.isDisplayed();
+            boolean displayed = element.isDisplayed();
+
+            if (displayed) {
+                logger.info("Element is displayed: {}", locator);
+            } else {
+                logger.warn("Element is present but not displayed: {}", locator);
+            }
+            return displayed;
         } catch (Exception e) {
-            System.out.println("Element is not displayed: " + locator);
+            logger.warn("Element is not displayed: {}", locator, e);
             return false;
         }
     }
 
-    // Wait for element to be clickable
     private WebElement waitForElementToBeClickable(By locator) {
         try {
+            logger.debug("Waiting for element to be clickable: {}", locator);
             return wait.until(ExpectedConditions.elementToBeClickable(locator));
         } catch (TimeoutException e) {
-            throw new RuntimeException("Element was not clickable within 10 seconds: " + locator, e);
+            logger.error("Element was not clickable within {} seconds: {}", EXPLICIT_WAIT, locator, e);
+            throw new RuntimeException("Element was not clickable within " + EXPLICIT_WAIT + " seconds: " + locator, e);
         }
     }
 
-    // Wait for element to be visible
     private WebElement waitForElementToBeVisible(By locator) {
         try {
+            logger.debug("Waiting for element to be visible: {}", locator);
             return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         } catch (TimeoutException e) {
-            throw new RuntimeException("Element was not visible within 10 seconds: " + locator, e);
+            logger.error("Element was not visible within {} seconds: {}", EXPLICIT_WAIT, locator, e);
+            throw new RuntimeException("Element was not visible within " + EXPLICIT_WAIT + " seconds: " + locator, e);
         }
     }
+
+
 }
