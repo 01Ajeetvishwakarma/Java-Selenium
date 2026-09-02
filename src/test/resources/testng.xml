@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<suite name="OrangeHRMSuite">
+<suite name="OrangeHRMSuite" parallel="classes" thread-count="4">
     <test name="OrangeHRMTest">
         <classes>
-<!--            <class name="com.orangehrm.tests.DummyTest"> </class>-->
-<!--            <class name="com.orangehrm.tests.DummyTest2"> </class>-->
-            <class name="com.orangehrm.tests.LoginPageTest"> </class>
-            <class name="com.orangehrm.tests.HomePageTest"> </class>
+            <class name="com.orangehrm.tests.LoginPageTest"></class>
+            <class name="com.orangehrm.tests.HomePageTest"></class>
         </classes>
     </test>
 </suite>

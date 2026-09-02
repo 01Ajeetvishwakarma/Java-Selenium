@@ -8,16 +8,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class LoginPageTest extends BaseClass{
+public class LoginPageTest extends BaseClass {
 
-    private LoginPage loginPage;
     private static final Logger logger = LoggerManager.getLogger(LoginPageTest.class);
+    private LoginPage loginPage;
 
     @BeforeMethod
     public void setupPages() {
         logger.debug("Initializing LoginPage");
         loginPage = new LoginPage(getActionDriver());
-        logger.debug("LoginPage initialized successfully");    }
+        logger.debug("LoginPage initialized successfully");
+    }
 
     @Test
     public void loginWithValidCredentials() {
@@ -28,6 +29,7 @@ public class LoginPageTest extends BaseClass{
         Assert.assertTrue(getDriver().getCurrentUrl().contains("/dashboard"), "Login failed. Dashboard was not opened.");
         logger.info("Login verification successful");
     }
+
 
     @Test
     public void loginWithInvalidCredentials() {

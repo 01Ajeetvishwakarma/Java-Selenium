@@ -11,9 +11,9 @@ import org.testng.annotations.Test;
 
 public class HomePageTest extends BaseClass {
 
+    private static final Logger logger = LoggerManager.getLogger(HomePageTest.class);
     private LoginPage loginPage;
     private HomePage homePage;
-    private static final Logger logger = LoggerManager.getLogger(HomePageTest.class);
 
     @BeforeMethod
     public void setupPages() {

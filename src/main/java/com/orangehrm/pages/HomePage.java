@@ -7,9 +7,8 @@ import org.openqa.selenium.By;
 
 public class HomePage {
 
-    private final ActionDriver actionDriver;
     private static final Logger logger = LoggerManager.getLogger(HomePage.class);
-
+    private final ActionDriver actionDriver;
     private final By orangeHRMLogo = By.xpath("//*[@id='app']/div[1]/div[1]/aside/nav/div[1]/a/div[2]");
 
     public HomePage(ActionDriver actionDriver) {
@@ -32,7 +31,6 @@ public class HomePage {
         }
         return isDisplayed;
     }
-
 
 
 }
