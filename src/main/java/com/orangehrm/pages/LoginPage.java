@@ -3,10 +3,10 @@ package com.orangehrm.pages;
 import com.orangehrm.actiondriver.ActionDriver;
 import com.orangehrm.utilities.ExtentManager;
 import com.orangehrm.utilities.LoggerManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 
-import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.WebDriver;;
+
 
 public class LoginPage {
 
@@ -28,19 +28,6 @@ public class LoginPage {
         ExtentManager.logStep("LoginPage initialized successfully");
     }
 
-//    public void login(String userName, String password) {
-//        logger.info("Starting login process for user: {}", userName);
-//        actionDriver.enterText(userNameField, userName);
-//        ExtentManager.logStep("Username entered successfully");
-//        logger.debug("Username entered successfully");
-//        actionDriver.enterText(passwordField, password);
-//        ExtentManager.logStep("Password entered successfully");
-//        logger.debug("Password entered successfully");
-//        actionDriver.click(loginButton);
-//        logger.info("Login button clicked successfully");
-//        ExtentManager.logPassWithScreenshot((WebDriver) actionDriver, "Valid login successful - Home page is displayed");
-////        ExtentManager.logStep("Login button clicked successfully");
-//    }
 
     public void login(String userName, String password) {
 

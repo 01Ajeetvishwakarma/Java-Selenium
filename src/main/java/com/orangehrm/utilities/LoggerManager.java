@@ -10,6 +10,9 @@ public final class LoggerManager {
     }
 
     public static Logger getLogger(Class<?> clazz) {
+        if(clazz == null){
+            throw new IllegalArgumentException("Logger class can not be null");
+        }
         return LogManager.getLogger(clazz);
     }
 }
