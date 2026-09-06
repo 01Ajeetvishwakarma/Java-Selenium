@@ -11,6 +11,7 @@ import com.orangehrm.utilities.LoggerManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -48,7 +49,7 @@ public class BaseClass {
 
     @BeforeMethod(alwaysRun = true)
     public void setup() {
-        long threadId = Thread.currentThread().getId();
+        long threadId = Thread.currentThread().threadId();
         logger.info("========== Starting Test Setup | Thread: {} ==========", threadId);
         try {
             WebDriver webDriver = createDriver();
@@ -68,7 +69,7 @@ public class BaseClass {
 
     @AfterMethod(alwaysRun = true)
     public void tearDown() {
-        long threadId = Thread.currentThread().getId();
+        long threadId = Thread.currentThread().threadId();
         logger.info("========== Starting Test Cleanup | Thread: {} ==========", threadId);
         cleanupDriver();
         logger.info("========== Test Cleanup Completed | Thread: {} ==========", threadId);
@@ -91,9 +92,10 @@ public class BaseClass {
 
     private WebDriver createDriver() {
         String browser = getBrowserName();
+
         logger.info("Creating WebDriver for browser: {}", browser);
         return switch (browser) {
-            case "chrome" -> new ChromeDriver();
+            case "chrome" -> new ChromeDriver(getChromeOptions());
             case "firefox" -> new FirefoxDriver();
             default -> {
                 logger.error("Unsupported browser configured: {}", browser);
@@ -102,142 +104,73 @@ public class BaseClass {
         };
     }
 
+    private ChromeOptions getChromeOptions() {
+        ChromeOptions options = new ChromeOptions();
+
+        options.addArguments("--headless");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--window-size=1920,1080");
+        options.addArguments("--disable-notifications");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+
+        return options;
+    }
+
     private void configureBrowser(WebDriver webDriver) {
-
         logger.info("Configuring browser");
-
-        int implicitWait =
-                getIntegerProperty(IMPLICIT_WAIT);
-
-        String url =
-                getRequiredProperty(URL);
-
-        webDriver.manage()
-                .timeouts()
-                .implicitlyWait(
-                        Duration.ofSeconds(implicitWait)
-                );
-
-        logger.info(
-                "Implicit wait configured: {} seconds",
-                implicitWait
-        );
-
-        webDriver.manage()
-                .window()
-                .maximize();
-
+        int implicitWait = getIntegerProperty(IMPLICIT_WAIT);
+        String url = getRequiredProperty(URL);
+        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+        logger.info("Implicit wait configured: {} seconds", implicitWait);
+        webDriver.manage().window().maximize();
         logger.info("Browser window maximized");
-
-        logger.info(
-                "Navigating to application URL: {}",
-                url
-        );
-
+        logger.info("Navigating to application URL: {}", url);
         webDriver.get(url);
-
-        logger.info(
-                "Successfully navigated to application"
-        );
+        logger.info("Successfully navigated to application");
     }
 
     private void validateConfiguration() {
-
-        logger.info(
-                "Validating configuration properties"
-        );
-
+        logger.info("Validating configuration properties");
         getRequiredProperty(BROWSER);
         getRequiredProperty(URL);
-
-        int implicitWait =
-                getIntegerProperty(IMPLICIT_WAIT);
-
+        int implicitWait = getIntegerProperty(IMPLICIT_WAIT);
         if (implicitWait < 0) {
-
-            throw new IllegalArgumentException(
-                    "implicitWait cannot be negative: "
-                            + implicitWait
-            );
+            throw new IllegalArgumentException("implicitWait cannot be negative: " + implicitWait);
         }
-
-        logger.info(
-                "Configuration validation completed successfully"
-        );
+        logger.info("Configuration validation completed successfully");
     }
 
     private String getRequiredProperty(String key) {
-
-        String value =
-                properties.getProperty(key);
-
+        String value = properties.getProperty(key);
         if (value == null || value.isBlank()) {
-
-            logger.error(
-                    "Required configuration property is missing: {}",
-                    key
-            );
-
-            throw new IllegalArgumentException(
-                    "Required configuration property is missing: "
-                            + key
-            );
+            logger.error("Required configuration property is missing: {}", key);
+            throw new IllegalArgumentException("Required configuration property is missing: " + key);
         }
-
         return value.trim();
     }
 
     private int getIntegerProperty(String key) {
-
-        String value =
-                getRequiredProperty(key);
-
+        String value = getRequiredProperty(key);
         try {
-
             return Integer.parseInt(value);
-
         } catch (NumberFormatException e) {
-
-            logger.error(
-                    "Invalid integer value for property '{}': {}",
-                    key,
-                    value,
-                    e
-            );
-
-            throw new IllegalArgumentException(
-                    "Invalid integer value for property '"
-                            + key
-                            + "': "
-                            + value,
-                    e
-            );
+            logger.error("Invalid integer value for property '{}': {}", key, value, e);
+            throw new IllegalArgumentException("Invalid integer value for property '" + key + "': " + value, e);
         }
     }
 
     private String getBrowserName() {
-
-        return getRequiredProperty(BROWSER)
-                .toLowerCase(Locale.ROOT);
+        return getRequiredProperty(BROWSER).toLowerCase(Locale.ROOT);
     }
 
 
     public static WebDriver getDriver() {
-
         WebDriver webDriver = driver.get();
-
         if (webDriver == null) {
-
-            logger.error(
-                    "WebDriver is not initialized for current thread"
-            );
-
-            throw new IllegalStateException(
-                    "WebDriver is not initialized. "
-                            + "Make sure setup() has executed."
-            );
+            logger.error("WebDriver is not initialized for current thread");
+            throw new IllegalStateException("WebDriver is not initialized. " + "Make sure setup() has executed.");
         }
-
         return webDriver;
     }
 

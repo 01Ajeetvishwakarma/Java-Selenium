@@ -1,0 +1,23 @@
+2026-09-06 13:43:33.826 INFO  [main] BaseClass - ========== Loading Test Configuration ==========
+2026-09-06 13:43:33.828 INFO  [main] BaseClass - Validating configuration properties
+2026-09-06 13:43:33.829 INFO  [main] BaseClass - Configuration validation completed successfully
+2026-09-06 13:43:33.829 INFO  [main] BaseClass - Configuration loaded and validated successfully
+2026-09-06 13:43:34.594 INFO  [main] ExcelReader - Test data read successfully from Excel. Sheet: invalidLogin | Rows: 1 | Columns: 2
+2026-09-06 13:43:34.606 INFO  [main] BaseClass - ========== Starting Test Setup | Thread: 3 ==========
+2026-09-06 13:43:34.607 INFO  [main] BaseClass - Creating WebDriver for browser: chrome
+2026-09-06 13:43:36.894 INFO  [main] BaseClass - chrome browser launched successfully
+2026-09-06 13:43:36.895 INFO  [main] BaseClass - Configuring browser
+2026-09-06 13:43:36.911 INFO  [main] BaseClass - Implicit wait configured: 10 seconds
+2026-09-06 13:43:36.964 INFO  [main] BaseClass - Browser window maximized
+2026-09-06 13:43:36.965 INFO  [main] BaseClass - Navigating to application URL: https://opensource-demo.orangehrmlive.com/web/index.php/auth/login
+2026-09-06 13:45:44.629 INFO  [main] BaseClass - Successfully navigated to application
+2026-09-06 13:45:44.658 INFO  [main] ActionDriver - ActionDriver initialized with 10 seconds explicit wait
+2026-09-06 13:45:44.659 INFO  [main] BaseClass - ActionDriver initialized successfully
+2026-09-06 13:45:44.660 INFO  [main] BaseClass - Test setup completed successfully | Thread: 3
+2026-09-06 13:45:44.670 DEBUG [main] LoginPageTest - Initializing LoginPage
+2026-09-06 13:45:44.673 DEBUG [main] LoginPage - LoginPage initialized
+2026-09-06 13:45:44.673 DEBUG [main] LoginPageTest - LoginPage initialized successfully
+2026-09-06 13:45:44.684 INFO  [main] LoginPageTest - Starting invalid login test
+2026-09-06 13:45:44.684 INFO  [main] LoginPage - Starting login process for user: admin
+2026-09-06 13:45:44.686 DEBUG [main] ActionDriver - Entering text into: By.name: username
+2026-09-06 13:45:44.686 DEBUG [main] ActionDriver - Waiting for element to be visible: By.name: username

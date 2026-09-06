@@ -163,11 +163,6 @@ public class ActionDriver {
         return truncateText(locatorValue);
     }
 
-
-//    private boolean isNotEmpty(String value) {
-//        return value != null && !value.isBlank();
-//    }
-
     private String truncateText(String text) {
         if (text == null || text.length() <= MAX_DESCRIPTION_LENGTH) {
             return text;
